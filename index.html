@@ -1,0 +1,50 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>特定社労士 暗記トレーニング</title>
+<style>body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif;background:#f5f6fa;color:#171923;margin:0}.w{max-width:700px;margin:auto;padding:20px 16px}h1{font-size:25px}.card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 5px 22px #0000000d}.top,.actions{display:flex;gap:10px;justify-content:space-between;align-items:center}select,input,button{font:inherit;border:1px solid #ddd;border-radius:12px;padding:12px}select{width:100%}input{width:100%;box-sizing:border-box;margin:16px 0 8px}button{background:#fff;font-weight:700}.primary{background:#111827;color:white}.q{font-size:18px;font-weight:700;line-height:1.7}.tag{font-size:12px;background:#eef2ff;padding:5px 9px;border-radius:20px;display:inline-block;margin-bottom:12px}.result,.exp{margin-top:12px;padding:12px;border-radius:12px;display:none}.ok{display:block;background:#ecfdf3;color:#137a43}.ng{display:block;background:#fff1f0;color:#b42318}.exp.show{display:block;background:#f7f7f8}.stats{font-size:13px}.controls{display:flex;gap:8px;margin:15px 0}.small{font-size:12px;color:#6b7280;margin-top:12px}</style></head><body><div class="w">
+<div class="top"><div><h1>特定社労士 暗記トレーニング</h1><div class="small">条文・判断枠組みを穴埋めで反復</div></div><b class="stats" id="stats"></b></div>
+<div class="controls"><select id="cat"></select><button id="miss">間違い復習</button></div>
+<div class="card"><span class="tag" id="tag"></span><div class="q" id="q"></div><input id="ans" placeholder="答えを入力"><button class="primary" id="check">答え合わせ</button>
+<div id="res" class="result"></div><div id="exp" class="exp"></div><div class="actions" style="margin-top:14px"><button id="show">正解を見る</button><button class="primary" id="next">次の問題</button></div>
+<div class="small">進捗はこの端末のブラウザ内に保存されます。</div></div></div>
+<script>
+const Q=[
+["労働契約法","3条2項","就業の実態に応じて、（　）を考慮しつつ締結・変更する。","均衡","3条2項＝就業の実態に応じた均衡。"],
+["労働契約法","3条3項","仕事と生活の（　）にも配慮する。","調和","ワーク・ライフ・バランスにつながる基本原則。"],
+["労働契約法","3条4項","（　）に従い誠実に、権利を行使し義務を履行する。","信義","信義誠実の原則。"],
+["労働契約法","3条5項","労働契約に基づく権利を（　）してはならない。","濫用","権利濫用の禁止。"],
+["労働契約法","5条","生命、身体等の安全を確保しつつ労働できるよう必要な（　）をする。","配慮","安全配慮義務。"],
+["労働契約法","16条","解雇は、（　）に合理的な理由を欠き、社会通念上相当と認められない場合、無効。","客観的","解雇権濫用法理。"],
+["労働契約法","16条","解雇は、客観的に合理的な理由を欠き、（　）上相当と認められない場合、無効。","社会通念","客観的合理性＋社会通念上の相当性。"],
+["労働契約法","19条","雇止めの拒絶が客観的に合理的な理由を欠き、（　）上相当と認められないとき。","社会通念","雇止め法理。"],
+["労働契約法","19条1号","反復更新され、その雇止めが無期契約の（　）と社会通念上同視できるもの。","解雇","いわゆる実質無期型。"],
+["労働契約法","19条2号","契約が更新されるものと（　）することについて合理的理由があるもの。","期待","いわゆる更新期待型。"],
+["民法","415条","債務者が債務の（　）に従った履行をしないとき等、損害賠償を請求できる。","本旨","債務不履行による損害賠償。"],
+["民法","415条","不履行が債務者の（　）に帰することができない事由による場合は原則として賠償責任を負わない。","責め","415条ただし書。"],
+["民法","709条","（　）又は過失によって他人の権利等を侵害した者は損害賠償責任を負う。","故意","不法行為。"],
+["民法","709条","故意又は過失によって他人の権利又は法律上保護される（　）を侵害した者。","利益","権利又は法律上保護される利益。"],
+["民法","715条","被用者がその（　）の執行について第三者に加えた損害について使用者が責任を負う。","事業","使用者責任。"],
+["判断枠組み","整理解雇","整理解雇4要素①：（　）の必要性","人員整理","①人員整理の必要性。"],
+["判断枠組み","整理解雇","整理解雇4要素②：（　）努力義務の履行","解雇回避","②解雇回避努力義務の履行。"],
+["判断枠組み","整理解雇","整理解雇4要素③：被解雇者（　）の合理性","選定","③被解雇者選定の合理性。"],
+["判断枠組み","整理解雇","整理解雇4要素④：（　）の妥当性","手続","④手続の妥当性。"],
+["判断枠組み","配転","配転命令権濫用の判断①：（　）上の必要性","業務","業務上の必要性。"],
+["判断枠組み","配転","配転命令権濫用の判断②：（　）な動機・目的がないこと","不当","不当な動機・目的の有無。"],
+["判断枠組み","配転","配転命令権濫用の判断③：通常（　）すべき程度を著しく超える不利益がないこと","甘受","通常甘受すべき程度を著しく超える不利益。"],
+["ハラスメント","パワハラ","3要素①：（　）を背景とした言動","優越的な関係","優越的な関係を背景とした言動。"],
+["ハラスメント","パワハラ","3要素②：業務上必要かつ（　）な範囲を超えたもの","相当","業務上必要かつ相当な範囲を超えた言動。"],
+["ハラスメント","パワハラ","3要素③：労働者の（　）が害されるもの","就業環境","就業環境が害されること。"],
+["ハラスメント","セクハラ","セクハラの2類型：（　）型と環境型","対価","対価型・環境型。"],
+["ハラスメント","セクハラ","セクハラの2類型：対価型と（　）型","環境","対価型・環境型。"],
+["労働契約上の義務","労働者","労働者の主たる義務：（　）提供義務","労務","使用者の賃金支払義務と対になる。"],
+["労働契約上の義務","労働者","付随的義務の例：職務専念・秘密保持・（　）避止義務","競業","労働契約・信義則を背景とする義務。"],
+["労働契約上の義務","使用者","使用者の主たる義務：（　）支払義務","賃金","労務提供義務と対になる。"],
+["労働契約上の義務","使用者","労契法5条：（　）配慮義務","安全","安全配慮義務。"]
+];
+let S=JSON.parse(localStorage.getItem("tokutei")||'{"ok":0,"all":0,"miss":[]}'), pool=[],cur,mm=false;
+const E=id=>document.getElementById(id), norm=s=>(s||"").normalize("NFKC").replace(/[、。,.・\s　]/g,"");
+E("cat").innerHTML=["すべて",...new Set(Q.map(x=>x[0]))].map(x=>`<option>${x}</option>`).join("");
+function save(){localStorage.setItem("tokutei",JSON.stringify(S));E("stats").textContent=`正解 ${S.ok} / ${S.all}`}
+function build(){let c=E("cat").value;pool=Q.map((x,i)=>[...x,i]).filter(x=>(c==="すべて"||x[0]===c)&&(!mm||S.miss.includes(x[5])));if(!pool.length){mm=false;E("miss").textContent="間違い復習";pool=Q.map((x,i)=>[...x,i]).filter(x=>c==="すべて"||x[0]===c)};next()}
+function next(){cur=pool[Math.floor(Math.random()*pool.length)];E("tag").textContent=cur[0]+" ｜ "+cur[1];E("q").textContent=cur[2];E("ans").value="";E("res").className="result";E("exp").className="exp"}
+function check(){let v=norm(E("ans").value);if(!v)return;S.all++;if(v===norm(cur[3])){S.ok++;S.miss=S.miss.filter(i=>i!==cur[5]);E("res").className="result ok";E("res").textContent="○ 正解！"}else{if(!S.miss.includes(cur[5]))S.miss.push(cur[5]);E("res").className="result ng";E("res").innerHTML="× 正解："+cur[3]}save()}
+E("check").onclick=check;E("next").onclick=next;E("show").onclick=()=>{E("exp").className="exp show";E("exp").innerHTML="<b>正解："+cur[3]+"</b><br>"+cur[4]};E("cat").onchange=build;E("miss").onclick=()=>{mm=!mm;E("miss").textContent=mm?"通常出題":"間違い復習";build()};E("ans").onkeydown=e=>{if(e.key==="Enter")check()};save();build();
+</script></body></html>
